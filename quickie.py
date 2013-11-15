@@ -499,7 +499,11 @@ elif len(args) == 1 or verbose:
     while True:
         os.system("clear")
         print("\nquickie\n\nenter code below. then press ctrl-d twice to run or press ctrl-c to exit.\n")
-        code = sys.stdin.read()
+        try:
+            code = sys.stdin.read()
+        except:
+            os.system("clear")
+            sys.exit()
         print("\nrunning code. output displayed below. \n\n")
         env = quickie_evironment()
         return_values = exec_mips(code, env)
