@@ -56,8 +56,8 @@ def exec_mips(code, evironment = global_env):
         comment = element.find("#")
         if comment != -1:
             instructions[i] = element[:comment]
-
-            
+    
+    
     instructions = list(filter(lambda s: s.strip() != "", instructions))
     for i in range(len(instructions)):
         element = instructions[i]
@@ -65,35 +65,35 @@ def exec_mips(code, evironment = global_env):
         if label != -1:
             labels[element[:label].strip()] = i
             instructions[i] = element[label + 1:]
-
+    
     for i in range(len(instructions)):
         element = instructions[i]
         for label in labels:
             if element.find(label) != -1 and element.find("beq") == -1 and element.find("bne") == -1:
                 instructions[i] = element.replace(label, str(labels[label]))
             if element.find(label) != -1 and element.find("beq") != -1 or element.find("bne") != -1:
-                instructions[i] = element.replace(label, str(labels[label] - i - 1)) 
-
+                instructions[i] = element.replace(label, str(labels[label] - i - 1))
+    
     exit = False
     program_counter = 0
     return_value = None
     if program_counter == len(instructions):
         return None
     while not exit:
-        instruction = instructions[program_counter] 
+        instruction = instructions[program_counter]
         instruction = instruction + " "
         instruction = instruction.lstrip()
         function_marker = min(instruction.find(" "), instruction.find("\t"))
         if instruction.find(" ") == -1:
-           function_marker = instruction.find("\t")
+            function_marker = instruction.find("\t")
         if instruction.find("\t") == -1:
-            function_marker = instruction.find(" ")  
+            function_marker = instruction.find(" ")
         if instruction.find(" ") == -1 and instruction.find("\t") == -1:
-            print("error in line " + str(program_counter + 1) + ".")  
+            print("error in line " + str(program_counter + 1) + ".")
             break
         function = instruction[0:function_marker]
         if function.find("$") != -1 or function.find(",") != -1:
-            print("error in line " + str(program_counter + 1) + ".")   
+            print("error in line " + str(program_counter + 1) + ".")
             break
         function = function.strip()
         instruction = instruction[function_marker:]
@@ -110,7 +110,7 @@ def exec_mips(code, evironment = global_env):
             instruction = instruction[arg2_marker + 1:]
             instruction = instruction.lstrip()
             arg3 = instruction.strip()
-
+            
             if function == "addi":
                 arg1 = arg1.strip("$")
                 arg2 = arg2.strip("$")
@@ -123,11 +123,11 @@ def exec_mips(code, evironment = global_env):
                     arg2 = int(arg2)
                     arg3 = int(arg3)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
                 evironment.registers[arg1] = evironment.registers[arg2] + arg3
                 return_value = (evironment.registers[2], evironment.registers[3])
-
+            
             if function == "add":
                 arg1 = arg1.strip("$")
                 arg2 = arg2.strip("$")
@@ -143,12 +143,12 @@ def exec_mips(code, evironment = global_env):
                     arg2 = int(arg2)
                     arg3 = int(arg3)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
                 evironment.registers[arg1] = evironment.registers[arg2] + evironment.registers[arg3]
                 return_value = (evironment.registers[2], evironment.registers[3])
-
-
+            
+            
             if function == "andi":
                 arg1 = arg1.strip("$")
                 arg2 = arg2.strip("$")
@@ -161,11 +161,11 @@ def exec_mips(code, evironment = global_env):
                     arg2 = int(arg2)
                     arg3 = int(arg3)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
                 evironment.registers[arg1] = evironment.registers[arg2] & arg3
                 return_value = (evironment.registers[2], evironment.registers[3])
- 
+            
             if function == "and":
                 arg1 = arg1.strip("$")
                 arg2 = arg2.strip("$")
@@ -181,11 +181,11 @@ def exec_mips(code, evironment = global_env):
                     arg2 = int(arg2)
                     arg3 = int(arg3)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
                 evironment.registers[arg1] = evironment.registers[arg2] & evironment.registers[arg3]
                 return_value = (evironment.registers[2], evironment.registers[3])
-
+            
             if function == "ori":
                 arg1 = arg1.strip("$")
                 arg2 = arg2.strip("$")
@@ -198,11 +198,11 @@ def exec_mips(code, evironment = global_env):
                     arg2 = int(arg2)
                     arg3 = int(arg3)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
                 evironment.registers[arg1] = evironment.registers[arg2] | arg3
                 return_value = (evironment.registers[2], evironment.registers[3])
-
+            
             if function == "or":
                 arg1 = arg1.strip("$")
                 arg2 = arg2.strip("$")
@@ -218,11 +218,11 @@ def exec_mips(code, evironment = global_env):
                     arg2 = int(arg2)
                     arg3 = int(arg3)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
                 evironment.registers[arg1] = evironment.registers[arg2] | evironment.registers[arg3]
                 return_value = (evironment.registers[2], evironment.registers[3])
-
+            
             if function == "beq":
                 arg1 = arg1.strip("$")
                 arg2 = arg2.strip("$")
@@ -235,14 +235,14 @@ def exec_mips(code, evironment = global_env):
                     arg2 = int(arg2)
                     arg3 = int(arg3)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
                 boolean = evironment.registers[arg1] == evironment.registers[arg2]
                 return_value = (evironment.registers[2], evironment.registers[3])
                 if boolean and program_counter + arg3 + 1< len(instructions):
                     program_counter = program_counter + 1 + arg3
                     continue
-
+            
             if function == "bne":
                 arg1 = arg1.strip("$")
                 arg2 = arg2.strip("$")
@@ -255,14 +255,14 @@ def exec_mips(code, evironment = global_env):
                     arg2 = int(arg2)
                     arg3 = int(arg3)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
                 boolean = evironment.registers[arg1] != evironment.registers[arg2]
                 return_value = (evironment.registers[2], evironment.registers[3])
                 if boolean and program_counter + arg3 + 1< len(instructions):
                     program_counter = program_counter + 1 + arg3
                     continue
-
+            
             if function == "slt":
                 arg1 = arg1.strip("$")
                 arg2 = arg2.strip("$")
@@ -278,11 +278,11 @@ def exec_mips(code, evironment = global_env):
                     arg2 = int(arg2)
                     arg3 = int(arg3)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
                 evironment.registers[arg1] = int(evironment.registers[arg2] < evironment.registers[arg3])
                 return_value = (evironment.registers[2], evironment.registers[3])
-
+            
             if function == "slti":
                 arg1 = arg1.strip("$")
                 arg2 = arg2.strip("$")
@@ -295,11 +295,11 @@ def exec_mips(code, evironment = global_env):
                     arg2 = int(arg2)
                     arg3 = int(arg3)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
                 evironment.registers[arg1] = int(evironment.registers[arg2] < arg3)
                 return_value = (evironment.registers[2], evironment.registers[3])
-
+            
             if function == "sub":
                 arg1 = arg1.strip("$")
                 arg2 = arg2.strip("$")
@@ -315,11 +315,11 @@ def exec_mips(code, evironment = global_env):
                     arg2 = int(arg2)
                     arg3 = int(arg3)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
                 evironment.registers[arg1] = evironment.registers[arg2] - evironment.registers[arg3]
                 return_value = (evironment.registers[2], evironment.registers[3])
-
+            
             if function == "mult":
                 arg1 = arg1.strip("$")
                 arg2 = arg2.strip("$")
@@ -335,13 +335,15 @@ def exec_mips(code, evironment = global_env):
                     arg2 = int(arg2)
                     arg3 = int(arg3)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
                 evironment.registers[arg1] = evironment.registers[arg2] * evironment.registers[arg3]
                 return_value = (evironment.registers[2], evironment.registers[3])
-
+            
             if function == "lw":
                 arg1 = arg1.strip("$")
+                offset = arg2[:arg2.find("(")]
+                arg2 = arg2[arg2.find("(")+1:arg2.find(")")]
                 arg2 = arg2.strip("$")
                 if arg1 in register_map:
                     arg1 = register_map[arg1]
@@ -350,14 +352,20 @@ def exec_mips(code, evironment = global_env):
                 try:
                     arg1 = int(arg1)
                     arg2 = int(arg2)
+                    offset = int(offset)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
-                evironment.registers[arg1] = evironment.memory[evironment.registers[arg2]]
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
+                if evironment.registers[arg2] + offset >= len(evironment.memory):
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
+                evironment.registers[arg1] = evironment.memory[evironment.registers[arg2] + offset]
                 return_value = (evironment.registers[2], evironment.registers[3])
-
+            
             if function == "sw":
                 arg1 = arg1.strip("$")
+                offset = arg2[:arg2.find("(")]
+                arg2 = arg2[arg2.find("(")+1:arg2.find(")")]
                 arg2 = arg2.strip("$")
                 if arg1 in register_map:
                     arg1 = register_map[arg1]
@@ -366,12 +374,16 @@ def exec_mips(code, evironment = global_env):
                 try:
                     arg1 = int(arg1)
                     arg2 = int(arg2)
+                    offset = int(offset)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
-                evironment.memory[evironment.registers[arg2]] = evironment.registers[arg1]  
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
+                if evironment.registers[arg2] + offset >= len(evironment.memory):
+                    print("out of bounds in line " + str(program_counter + 1) + ".")
+                    break
+                evironment.memory[evironment.registers[arg2] + offset] = evironment.registers[arg1]
                 return_value = (evironment.registers[2], evironment.registers[3])
-
+            
             if function == "sll":
                 arg1 = arg1.strip("$")
                 arg2 = arg2.strip("$")
@@ -387,11 +399,11 @@ def exec_mips(code, evironment = global_env):
                     arg2 = int(arg2)
                     arg3 = int(arg3)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
+                    print("out of bounds in line " + str(program_counter + 1) + ".")
+                    break
                 evironment.registers[arg1] = evironment.registers[arg2] << evironment.registers[arg3]
                 return_value = (evironment.registers[2], evironment.registers[3])
-
+            
             if function == "sra":
                 arg1 = arg1.strip("$")
                 arg2 = arg2.strip("$")
@@ -407,11 +419,11 @@ def exec_mips(code, evironment = global_env):
                     arg2 = int(arg2)
                     arg3 = int(arg3)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break 
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
                 evironment.registers[arg1] = evironment.registers[arg2] >> evironment.registers[arg3]
                 return_value = (evironment.registers[2], evironment.registers[3])
-
+            
             if function == "li":
                 arg1 = arg1.strip("$")
                 arg2 = arg2.strip("$")
@@ -423,24 +435,24 @@ def exec_mips(code, evironment = global_env):
                     arg1 = int(arg1)
                     arg2 = int(arg2)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
                 evironment.registers[arg1] = arg2
                 return_value = (evironment.registers[2], evironment.registers[3])
-            
+        
         else:
             arg1 = instruction.strip()
             if function == "j":
                 try:
                     arg1 = int(arg1)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
                 return_value = (evironment.registers[2], evironment.registers[3])
                 if arg1 < len(instructions) and arg1 >= 0:
                     program_counter = arg1
                     continue
-    
+            
             if function == "disp":
                 arg1 = arg1.strip("$")
                 if arg1 in register_map:
@@ -448,46 +460,46 @@ def exec_mips(code, evironment = global_env):
                 try:
                     arg1 = int(arg1)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
                 print(evironment.registers[arg1])
                 return_value = (evironment.registers[2], evironment.registers[3])
-
+            
             if function == "jal":
-               try:
-                   arg1 = int(arg1)
-               except Exception as e:
-                   print("error in line " + str(program_counter + 1) + ".")  
-                   break  
-               return_value = (evironment.registers[2], evironment.registers[3])
-               if arg1 < len(instructions) and arg1 >= 0:
-                   evironment.registers[31] = program_counter + 1
-                   program_counter = arg1
-                   continue
-
+                try:
+                    arg1 = int(arg1)
+                except Exception as e:
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
+                return_value = (evironment.registers[2], evironment.registers[3])
+                if arg1 < len(instructions) and arg1 >= 0:
+                    evironment.registers[31] = program_counter + 1
+                    program_counter = arg1
+                    continue
+            
             if function == "jr":
                 arg1 = arg1.strip("$")
                 if arg1 in register_map:
                     arg1 = register_map[arg1]
                 try:
-                   arg1 = int(arg1)
+                    arg1 = int(arg1)
                 except Exception as e:
-                    print("error in line " + str(program_counter + 1) + ".")  
-                    break  
+                    print("error in line " + str(program_counter + 1) + ".")
+                    break
                 return_value = (evironment.registers[2], evironment.registers[3])
                 if evironment.registers[arg1] < len(instructions) and evironment.registers[arg1] >= 0:
                     program_counter = evironment.registers[arg1]
                     continue
-
+        
         evironment.registers[0] = 0
         if program_counter + 1 < len(instructions):
             program_counter = program_counter + 1
         else:
             exit = True
     return return_value
-     
+
 args = sys.argv
-verbose = False 
+verbose = False
 
 if len(args) > 1 and args[1] == "-v":
     verbose = True
@@ -518,7 +530,7 @@ elif len(args) == 1 or verbose:
             print("\n")
             print("MEMORY")
             for i in range(len(memory)):
-                print(str(i) + "\t" + str(memory[i])) 
+                print(str(i) + "\t" + str(memory[i]))
             print("\n")
         else:
             print("\nv0 = " + str(return_values[0]))
@@ -549,4 +561,4 @@ else:
         print("\nv0 = " + str(return_values[0]))
         print("v1 = " + str(return_values [1]))
         print("\n")
-        	
+

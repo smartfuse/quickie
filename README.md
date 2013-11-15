@@ -44,11 +44,11 @@ subtracts the value in $r3 from the value in $r2, then stores it in $r1.
 mult	$r1, $r2, $r3
 multiplies the value in $r2 by the value in $r3 and stores it in $r1.
 
-lw	$r1, $r2
-loads the word from memory specified by $r2 and stores it in $r1. note: there's no offset and everything is word-addressed.
+lw	$r1, offset($r2)
+loads the word from memory specified by $r2 + offset and stores it in $r1. note: everything is word-addressed.
 
 sw	$r1, $r2
-stores $r1 into memory specified by $r2. note: there's no offset and everything is word-address.
+stores $r1 into memory specified by $r2 + offset. note: everything is word-addressed.
 
 sll	$r1, $r2, $r3
 shifts the value in $r2 left by the value in $r3 and stores it in $r1.
