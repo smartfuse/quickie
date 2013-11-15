@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # quickie 1.0
 # MIPS Runtime Evironment in Python
 
