@@ -520,8 +520,7 @@ elif len(args) == 1 or verbose:
             print("\nv0 = " + str(return_values[0]))
             print("v1 = " + str(return_values [1]))
             print("\n")
-        print("press enter to continue")
-        os.system("read")
+        input("press enter to continue")
 else:
     os.system("clear")
     print("\nquickie\n\nrunning code. output displayed below. \n\n")
